@@ -1,4 +1,4 @@
-﻿function Get-NtSystemInformation
+function Get-NtSystemInformation
 {
 <#
 .SYNOPSIS
@@ -645,7 +645,7 @@
 
         foreach ($i in 0..($Count-1))
         {
-            [Runtime.InteropServices.Marshal]::PtrToStructure($StructAddress, $StructType)
+            [Runtime.InteropServices.Marshal]::PtrToStructure($StructAddress, [Type] $StructType)
             $StructAddress = ([IntPtr]($StructAddress.ToInt64() + $StructSize))
         }
 
@@ -970,7 +970,7 @@
                 # Base address of the _SYSTEM_OBJECTTYPE_INFORMATION struct
                 $ObjectTypeAbsoluteAddress = [IntPtr]($PtrData.ToInt64() + $NextTypeOffset)
 
-                $Result = [Runtime.InteropServices.Marshal]::PtrToStructure($ObjectTypeAbsoluteAddress, $ObjectTypeClass)
+                $Result = [Runtime.InteropServices.Marshal]::PtrToStructure($ObjectTypeAbsoluteAddress, [Type] $ObjectTypeClass)
 
                 if ($Result.NumberOfObjects -gt 0)
                 {
@@ -982,7 +982,7 @@
 
                     do
                     {
-                        $ObjectResult = [Runtime.InteropServices.Marshal]::PtrToStructure(( [IntPtr]($ObjectBaseAddr.ToInt64() + $NextObjectOffset) ), $ObjectClass)
+                        $ObjectResult = [Runtime.InteropServices.Marshal]::PtrToStructure(( [IntPtr]($ObjectBaseAddr.ToInt64() + $NextObjectOffset) ), [Type] $ObjectClass)
 
                         $ResultHashTable2 = @{
                             Object = $ObjectResult.Object
