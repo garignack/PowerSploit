@@ -415,5 +415,29 @@
                 </ListEntries>
             </ListControl>
         </View>
+<<<<<<< HEAD
+=======
+        <View>
+            <Name>CodeIntegrityTypeView</Name>
+                <ViewSelectedBy>
+		            <TypeName>_SYSTEM_CODEINTEGRITY_INFORMATION</TypeName>
+		        </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                                <PropertyName>CodeIntegrityOptions</PropertyName>
+                                <FormatString>0x{0:X8}</FormatString>
+                            </ListItem>
+                            <ListItem>
+                                <PropertyName>LockdownState</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
+>>>>>>> upstream/master
     </ViewDefinitions>
 </Configuration>

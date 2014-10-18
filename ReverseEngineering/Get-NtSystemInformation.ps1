@@ -49,6 +49,13 @@
     Returns information about user-mode objects and their respective kernel pool
     allocations.
 
+<<<<<<< HEAD
+=======
+.PARAMETER CodeIntegrityInformation
+
+    Returns user-mode code integrity flags.
+
+>>>>>>> upstream/master
 .PARAMETER GlobalFlags
 
     Returns a list of all enabled global flags.
@@ -139,6 +146,13 @@
         [Switch]
         $LockInformation,
 
+<<<<<<< HEAD
+=======
+        [Parameter( ParameterSetName = 'CodeIntegrityInformation' )]
+        [Switch]
+        $CodeIntegrityInformation,
+
+>>>>>>> upstream/master
         [Parameter( ParameterSetName = 'GlobalFlags' )]
         [Switch]
         $GlobalFlags
@@ -202,6 +216,10 @@
         #$EnumBuilder.DefineLiteral('SystemExceptionInformation', [Int32] 0x00000021) | Out-Null
         #$EnumBuilder.DefineLiteral('SystemRegistryQuotaInformation', [Int32] 0x00000025) | Out-Null
         #$EnumBuilder.DefineLiteral('SystemLookasideInformation', [Int32] 0x0000002D) | Out-Null
+<<<<<<< HEAD
+=======
+        $EnumBuilder.DefineLiteral('SystemCodeIntegrityInformation', [Int32] 0x00000067) | Out-Null
+>>>>>>> upstream/master
         $SystemInformationClass = $EnumBuilder.CreateType()
     }
 
@@ -213,6 +231,18 @@
         $NtStatus = $EnumBuilder.CreateType()
     }
 
+<<<<<<< HEAD
+=======
+    try { $LockdownState = [LOCKDOWN_STATE] } catch [Management.Automation.RuntimeException]
+    {
+        $EnumBuilder = $ModuleBuilder.DefineEnum('LOCKDOWN_STATE', 'Public', [Int32])
+        $EnumBuilder.DefineLiteral('UMCINONE', [Int32] 0x00000000) | Out-Null
+        $EnumBuilder.DefineLiteral('UMCIENFORCE', [Int32] 0x00000004) | Out-Null
+        $EnumBuilder.DefineLiteral('UMCIAUDIT', [Int32] 0xC0000008) | Out-Null
+        $LockdownState = $EnumBuilder.CreateType()
+    }
+
+>>>>>>> upstream/master
     try { $PoolType = [POOL_TYPE] } catch [Management.Automation.RuntimeException]
     {
         $EnumBuilder = $ModuleBuilder.DefineEnum('POOL_TYPE', 'Public', [UInt32])
@@ -1019,6 +1049,29 @@
             Get-Struct @Arguments
         }
 
+<<<<<<< HEAD
+=======
+        'CodeIntegrityInformation' {
+            $CIStructLength = 8
+            $PtrData = [Runtime.InteropServices.Marshal]::AllocHGlobal($CIStructLength)
+            [Runtime.InteropServices.Marshal]::WriteInt64($PtrData, 0)
+            [Runtime.InteropServices.Marshal]::WriteByte($PtrData, 8) # The length field in SYSTEM_CODEINTEGRITY_INFORMATION must be set to 8
+            $ntdll::NtQuerySystemInformation($SystemInformationClass::SystemCodeIntegrityInformation, $PtrData, $CIStructLength, [Ref] 0) | Out-Null
+            $CIInfo = [Runtime.InteropServices.Marshal]::ReadInt32(([IntPtr]($PtrData.ToInt64() + 4)))
+            [Runtime.InteropServices.Marshal]::FreeHGlobal($PtrData)
+
+            $ResultHashTable = @{
+                CodeIntegrityOptions = $CIInfo
+                LockdownState = ($CIInfo -band 0x1C) -as $LockdownState
+            }
+
+            $CodeIntegrityType = New-Object PSObject -Property $ResultHashTable
+            $CodeIntegrityType.PSObject.TypeNames.Insert(0, '_SYSTEM_CODEINTEGRITY_INFORMATION')
+
+            Write-Output $CodeIntegrityType
+        }
+
+>>>>>>> upstream/master
         'GlobalFlags' {
             $TotalLength = 0
             $ReturnedLength = 0
